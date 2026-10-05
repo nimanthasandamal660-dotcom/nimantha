@@ -39,3 +39,4 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    cover_image = models.ImageField(upload_to="post_covers/", blank=True, null=True)

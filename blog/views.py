@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView, CreateView, UpdateView
+from .forms import PostForm
 from .models import Category, Post
 
 
-# Post List View (Class-Based View)
+# Post List View (CBV)
 class PostListView(ListView):
     model = Post
     template_name = "blog/post_list.html"
@@ -14,12 +16,11 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Sidebar එකට අවශ්‍ය Categories සියල්ල ලබා ගැනීම
         context["categories"] = Category.objects.all()
         return context
 
 
-# Post Detail View (Class-Based View)
+# Post Detail View (CBV)
 class PostDetailView(DetailView):
     model = Post
     template_name = "blog/post_detail.html"
@@ -29,7 +30,27 @@ class PostDetailView(DetailView):
         return Post.objects.filter(status="published")
 
 
-# Static Pages (Function-Based Views)
+# Post Create View (CBV)
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = "blog/post_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("post_detail", kwargs={"slug": self.object.slug})
+
+
+# Post Update View (CBV)
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = "blog/post_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("post_detail", kwargs={"slug": self.object.slug})
+
+
+# Static Pages (FBVs)
 def home(request):
     return render(request, "blog/home.html")
 
