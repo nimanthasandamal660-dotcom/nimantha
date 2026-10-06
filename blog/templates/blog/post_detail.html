@@ -1,16 +1,26 @@
 {% extends "blog/base.html" %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title }} - DjangoBlog{% endblock %}
 
 {% block content %}
-<h1>{{ post.title }}</h1>
-<p class="text-muted">{{ post.created_at|date:"M d, Y" }}</p>
-<p>{{ post.content }}</p>
+<div class="container mt-4">
+    <!-- Cover Image එක තියෙනවා නම් පෙන්වීම -->
+    {% if post.cover_image %}
+        <img src="{{ post.cover_image.url }}" class="img-fluid rounded mb-3" alt="{{ post.title }}">
+    {% endif %}
 
-{% if post.category %}
-  <span class="badge bg-secondary">{{ post.category.name }}</span>
-{% endif %}
+    <h1>{{ post.title }}</h1>
+    <p class="text-muted">{{ post.created_at|date:"N j, Y" }}</p>
+    
+    <div class="mb-4">
+        {{ post.content|linebreaks }}
+    </div>
+
+    <!-- Edit, Delete, සහ Back Buttons -->
+    <div class="mt-4 pt-3 border-top">
+        <a href="{% url 'post_update' post.slug %}" class="btn btn-warning">Edit Post</a>
+        <a href="{% url 'post_delete' post.slug %}" class="btn btn-danger">Delete Post</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Posts</a>
+    </div>
+</div>
 {% endblock %}
-{% if post.cover_image %}
-    <img src="{{ post.cover_image.url }}" class="img-fluid rounded mb-3" alt="{{ post.title }}">
-{% endif %}

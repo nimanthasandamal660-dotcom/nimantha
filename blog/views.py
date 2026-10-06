@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, CreateView, UpdateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from .forms import PostForm
 from .models import Category, Post
 
@@ -48,6 +48,13 @@ class PostUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("post_detail", kwargs={"slug": self.object.slug})
+
+
+# Post Delete View (CBV)
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = "blog/post_confirm_delete.html"
+    success_url = reverse_lazy("home")
 
 
 # Static Pages (FBVs)
