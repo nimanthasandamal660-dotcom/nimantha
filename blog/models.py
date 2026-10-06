@@ -36,6 +36,12 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+        if self.cover_image:
+            img_path = self.cover_image.path
+            img = Image.open(img_path)
+            if img.height > 800 or img.width > 800:
+                img.thumbnail((800, 800))
+                img.save(img_path)
 
     def __str__(self):
         return self.title
